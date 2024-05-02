@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -159,15 +160,24 @@ void test_pmkdir() {
 
 void test_mvsp() {
     // Create a temporary file
-    FILE *tmp = tmpfile();
-    // Get the file name
-    char *old_path = tmpnam(NULL);
-    // Define a new path
-    char *new_path = "/tmp/new_file";
+    char old_path[] = "/tmp/tmpfileXXXXXX";
+    int fd = mkstemp(old_path);
+    if (fd == -1) {
+        perror("mkstemp");
+        return;
+    }
 
     // Write something to the file
+    FILE *tmp = fdopen(fd, "w+");
+    if (tmp == NULL) {
+        perror("fdopen");
+        return;
+    }
     fputs("Hello, World!", tmp);
     fclose(tmp);
+
+    // Define a new path
+    char *new_path = "/tmp/new_file";
 
     // Move the file
     int result = mvsp(old_path, new_path);
