@@ -48,7 +48,7 @@ int wrnfile(const char* filePath,char* buffer,long size);
         * 1 - exists
         * 2 - Not a directory
 */
-int xisdir (const char *d);
+int isdir (const char *d);
 // create dir recursivelty (similar to mkdir -p)
 int pmkdir (const char *dir);
 //  move a file and create the dir if it doesn't exist
@@ -65,6 +65,7 @@ Functions :
  * popcharn - Remove a character from a string (with a size limit)
  * splita - Split a string into an array of strings
  * countc - Count the number of occurences of a char in a string
+ * strinarr - Check if a string is in an array
 */
 
 #define popcharn(str,pos,s_size) if (pos < s_size) { memmove(&str[pos], &str[pos + 1], s_size - pos - 1); str[s_size-1] = '\0'; }
@@ -75,6 +76,9 @@ unsigned int splita (char* string,char delim,char*** dest);
 
 // to count the number of occurences of a char in a string
 unsigned int countc(const char* string,char c);
+
+// check if a string is in an array
+int strinarr( char* val, char** arr,long arrsize);
 
 /*
 Logging and debug utils

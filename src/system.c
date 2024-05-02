@@ -36,7 +36,7 @@ char** ls(char* path)
 }
 
 
-int isdir (const char *d)
+int xisdir (const char *d)
 {
 
     DIR* dirptr;
