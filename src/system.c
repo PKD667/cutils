@@ -5,6 +5,8 @@
 #include "dirent.h"
 #include "sys/stat.h"
 
+#include "../cutils.h"
+
 char** ls(char* path)
 {
     DIR *d;
@@ -12,13 +14,12 @@ char** ls(char* path)
     d = opendir(path);
     char** list = calloc(512,sizeof(char*));
     int count = 0;
-    if (d)
-    {
+    if (d) {
         while ((dir = readdir(d)) != NULL)
         {
             if (count > 512)
             {
-                printf("Error : too many elements in list , reallocating\n");
+                dbg(1,"ls: reallocating list");
                 list = realloc(list,(count+512) * sizeof(char*));
             }
             list[count] = dir->d_name;
@@ -26,6 +27,10 @@ char** ls(char* path)
         }
 
         closedir(d);
+    }
+    else {
+        msg(ERROR,"ls: could not open directory %s",path);
+        return NULL;
     }
     return list;
 }

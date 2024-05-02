@@ -14,7 +14,7 @@ BIN_DIR = bin
 CC = gcc
 
 # The C flags to use
-CFLAGS = -Iinclude -fPIC
+CFLAGS = -Iinclude -fPIC -g 
 
 # The source files
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
@@ -36,8 +36,12 @@ $(LIBRARY): $(OBJECTS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $< -D MEMCHECK=$(MEMCHECK)
 
+bundle:
+	cat $(SOURCES) > cutils.c
+
 test:
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test test.c $(LIBRARY).a
+	$(CC) -DMEMCHECK=1 $(CFLAGS) -o $(BIN_DIR)/test test.c $(LIBRARY).a
+	bin/test
 
 clean:
 	rm -f $(OBJ_DIR)/*.o

@@ -1,4 +1,5 @@
 #include "cutils.h"
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -66,9 +67,19 @@ void test_check_leaks()
     assert(leaks == 0);
 }
 
+void test_isdir()
+{
+    assert(isdir("src") == 0);
+    assert(isdir("src/system.c") == 2);
+    assert(isdir("src/doesnotexist") == 1);
+}
+
 
 int main(int argc, char const *argv[])
 {
+
+    DEBUG = 4;
+
     printf("Running tests...\n");
     printf("popchar_test()\n");
     popchar_test();
