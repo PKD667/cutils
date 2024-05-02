@@ -69,9 +69,9 @@ void test_check_leaks()
 
 void test_isdir()
 {
-    assert(isdir("src") == 0);
-    assert(isdir("src/system.c") == 2);
-    assert(isdir("src/doesnotexist") == 1);
+    assert(xisdir("src") == 0);
+    assert(xisdir("src/system.c") == 2);
+    assert(xisdir("src/doesnotexist") == 1);
 }
 
 // Add tests for file operations

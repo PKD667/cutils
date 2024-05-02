@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "stdint.h"
+
 
 // High-resolution timer
 static inline uint64_t get_time_ns() {
