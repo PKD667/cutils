@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 int popchar_test()
 {
@@ -11,7 +12,6 @@ int popchar_test()
     printf("%s\n",str);
     return 0;
 }
-
 
 void test_dbg_malloc()
 {
@@ -74,6 +74,48 @@ void test_isdir()
     assert(isdir("src/doesnotexist") == 1);
 }
 
+// Add tests for file operations
+void test_rmrf() {
+    // Test implementation for rmrf
+}
+
+void test_rdfile() {
+    // Test implementation for rdfile
+}
+
+void test_wrfile() {
+    // Test implementation for wrfile
+}
+
+void test_pmkdir() {
+    // Test implementation for pmkdir
+}
+
+void test_mvsp() {
+    // Test implementation for mvsp
+}
+
+void test_ls() {
+    // Test implementation for ls
+}
+
+// Add tests for string utilities
+void test_splita() {
+    // Test implementation for splita
+}
+
+void test_countc() {
+    // Test implementation for countc
+}
+
+// Add tests for system management functions
+void test_xisdir() {
+    // Test implementation for xisdir
+}
+
+void test_exec() {
+    // Test implementation for exec
+}
 
 int main(int argc, char const *argv[])
 {
@@ -95,6 +137,7 @@ int main(int argc, char const *argv[])
     test_dbg_free();
     printf("test_check_leaks()\n");
     test_check_leaks();
+    // Add calls to new test functions here
     printf("All tests passed!\n");
     return 0;
 }
