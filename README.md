@@ -36,7 +36,22 @@ The benchmark results are displayed in nanoseconds (ns) and provide an insight i
 
 The repository is configured with GitHub Actions to automatically run the benchmarking suite and update the `README.md` with the latest results upon every push. This ensures that the performance data is always up-to-date.
 
+## Automated Testing and Benchmarking with GitHub Actions
+
+CUtils now leverages GitHub Actions to automatically run the test suite and benchmarking suite upon every push to the repository and on pull requests. This ensures that the code quality and performance are consistently monitored and maintained.
+
+### Test Suite Automation
+
+The test suite is executed automatically using the `make test` command through the GitHub Actions workflow defined in `.github/workflows/run_tests.yml`. This workflow triggers on every push and pull request to the repository.
+
+![Test Workflow Status](https://github.com/PKD667/cutils/actions/workflows/run_tests.yml/badge.svg)
+
+### Benchmark Suite Automation
+
+Similarly, the benchmarking suite is run using the `make benchmark` command via the GitHub Actions workflow found in `.github/workflows/run_benchmarks.yml`. This workflow is triggered on every push to the repository.
+
+![Benchmark Workflow Status](https://github.com/PKD667/cutils/actions/workflows/run_benchmarks.yml/badge.svg)
+
 ## Contributing
 
 Contributions to CUtils are welcome. Please submit a pull request or open an issue to discuss proposed changes or additions.
-
