@@ -39,6 +39,16 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 test:
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test test.c $(LIBRARY).a
 
+test_all:
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_all test.c $(LIBRARY).a
+	./$(BIN_DIR)/test_all
+	if [ $$? -eq 0 ]; then \
+		echo "All tests passed successfully!"; \
+	else \
+		echo "Some tests failed."; \
+		exit 1; \
+	fi
+
 clean:
 	rm -f $(OBJ_DIR)/*.o
 	rm -f $(LIBRARY).a
