@@ -11,79 +11,82 @@ static inline uint64_t get_time_ns() {
 }
 
 void benchmark_rmrf() {
-    // Benchmark implementation for rmrf
+    uint64_t start = get_time_ns();
+    rmrf("test_directory");
+    uint64_t end = get_time_ns();
+    printf("rmrf execution time: %lu ns\n", end - start);
 }
 
 void benchmark_rdfile() {
-    // Benchmark implementation for rdfile
+    char* buffer;
+    uint64_t start = get_time_ns();
+    rdfile("test_file.txt", &buffer);
+    uint64_t end = get_time_ns();
+    free(buffer);
+    printf("rdfile execution time: %lu ns\n", end - start);
 }
 
 void benchmark_wrfile() {
-    // Benchmark implementation for wrfile
+    char* data = "This is a test string for wrfile benchmarking.";
+    uint64_t start = get_time_ns();
+    wrfile("test_output.txt", data);
+    uint64_t end = get_time_ns();
+    printf("wrfile execution time: %lu ns\n", end - start);
 }
 
 void benchmark_pmkdir() {
-    // Benchmark implementation for pmkdir
+    uint64_t start = get_time_ns();
+    pmkdir("test_directory/sub_directory");
+    uint64_t end = get_time_ns();
+    printf("pmkdir execution time: %lu ns\n", end - start);
 }
 
 void benchmark_mvsp() {
-    // Benchmark implementation for mvsp
+    uint64_t start = get_time_ns();
+    mvsp("test_file.txt", "test_directory/test_file.txt");
+    uint64_t end = get_time_ns();
+    printf("mvsp execution time: %lu ns\n", end - start);
 }
 
 void benchmark_ls() {
-    // Benchmark implementation for ls
+    uint64_t start = get_time_ns();
+    char** files = ls("test_directory");
+    uint64_t end = get_time_ns();
+    free(files);
+    printf("ls execution time: %lu ns\n", end - start);
 }
 
 void benchmark_splita() {
-    // Benchmark implementation for splita
+    char* test_string = "This,is,a,test,string,for,splita,benchmarking";
+    char** result;
+    uint64_t start = get_time_ns();
+    splita(test_string, ',', &result);
+    uint64_t end = get_time_ns();
+    free(result);
+    printf("splita execution time: %lu ns\n", end - start);
 }
 
 void benchmark_countc() {
-    // Benchmark implementation for countc
+    char* test_string = "This is a test string for countc benchmarking.";
+    uint64_t start = get_time_ns();
+    countc(test_string, 't');
+    uint64_t end = get_time_ns();
+    printf("countc execution time: %lu ns\n", end - start);
 }
 
 int main() {
-    uint64_t start, end;
+    printf("Starting benchmarks...\n");
 
-    start = get_time_ns();
     benchmark_rmrf();
-    end = get_time_ns();
-    printf("rmrf benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_rdfile();
-    end = get_time_ns();
-    printf("rdfile benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_wrfile();
-    end = get_time_ns();
-    printf("wrfile benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_pmkdir();
-    end = get_time_ns();
-    printf("pmkdir benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_mvsp();
-    end = get_time_ns();
-    printf("mvsp benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_ls();
-    end = get_time_ns();
-    printf("ls benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_splita();
-    end = get_time_ns();
-    printf("splita benchmark: %lu ns\n", end - start);
-
-    start = get_time_ns();
     benchmark_countc();
-    end = get_time_ns();
-    printf("countc benchmark: %lu ns\n", end - start);
+
+    printf("Benchmarks completed.\n");
 
     return 0;
 }
