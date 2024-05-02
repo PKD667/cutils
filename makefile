@@ -49,6 +49,10 @@ test_all:
 		exit 1; \
 	fi
 
+benchmark:
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/benchmark benchmark.c $(LIBRARY).a
+	./$(BIN_DIR)/benchmark
+
 clean:
 	rm -f $(OBJ_DIR)/*.o
 	rm -f $(LIBRARY).a
