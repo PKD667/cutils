@@ -1,0 +1,44 @@
+name: Update Submodule
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone Libspm
+        run: |
+          git clone https://github.com/Soviet-Linux/libspm --recurse-submodules
+          cd libspm
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Update submodule
+        run: |
+          cd libspm
+          git checkout -b update-submodule
+          (cd lib/cutils &&  git pull origin main)
+          git add .
+          git commit -m "Update submodule to latest commit" || echo "Nothing to commit"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd libspm
+          git push origin update-submodule
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Update submodule"
+          body: "This PR updates the submodule to the latest commit."
+          branch: "update-submodule"

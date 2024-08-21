@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 obj
 bin
 cutils.a
 
+=======
+# Ignore object files
+obj/*
+# Ignore executables
+bin/*
+>>>>>>> 8c709f2d8bd42d5d4f723d1d07de1fa61dbc0a47

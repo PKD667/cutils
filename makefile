@@ -25,8 +25,13 @@ OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 # memory checking
 MEMCHECK = 0
 
-# The default target
-all: $(LIBRARY)
+# The default targetall: directories $(LIBRARY)
+all: directories $(LIBRARY)
+
+# Create the necessary directories
+directories:
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(BIN_DIR)
 
 # Build the library
 $(LIBRARY): $(OBJECTS)
@@ -36,6 +41,7 @@ $(LIBRARY): $(OBJECTS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $< -D MEMCHECK=$(MEMCHECK)
 
+<<<<<<< HEAD
 bundle:
 	cat $(SOURCES) > cutils.c
 
@@ -53,6 +59,11 @@ test_all:
 		exit 1; \
 	fi
 
+=======
+check:
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test test.c $(LIBRARY).a -D MEMCHECK=1
+	bin/test
+>>>>>>> 8c709f2d8bd42d5d4f723d1d07de1fa61dbc0a47
 
 clean:
 	rm -f $(OBJ_DIR)/*.o
