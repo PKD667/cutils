@@ -9,7 +9,6 @@ It is licensed under the GNU General Public License v3.0.
 #include "string.h"
 #include "stdlib.h"
 #include "stdio.h"
-#include "malloc.h"
 
 
 #ifndef CUTILS_H

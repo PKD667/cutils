@@ -4,23 +4,30 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <malloc.h>
+
 
 #define MAX_PTRS 4096
 
 typedef struct {
     void* ptr;
+    int size;
     const char* file;
     int line;
 } ptr_entry;
 
+typedef struct {
+    ptr_entry entry;
+    const char* free_file;
+    int free_line;
+} freed_ptr_entry;
+
 ptr_entry alloced_ptrs[MAX_PTRS] = {0};
 int alloced_ptrs_i = 0;
 
-ptr_entry freed_ptrs[MAX_PTRS] = {0};
+freed_ptr_entry freed_ptrs[MAX_PTRS] = {0};
 int freed_ptrs_i = 0;
 
-int log_ptr(void* ptr, const char* file, int line)
+int log_ptr(void* ptr,int size, const char* file, int line)
 {
     if (alloced_ptrs_i >= MAX_PTRS)
     {
@@ -38,22 +45,22 @@ int unlog_ptr(void* ptr, const char* file, int line)
 {
     for (int i = 0; i < alloced_ptrs_i; i++) {
         if (alloced_ptrs[i].ptr == ptr) {
-            freed_ptrs[freed_ptrs_i].ptr = ptr;
-            freed_ptrs[freed_ptrs_i].file = file;
-            freed_ptrs[freed_ptrs_i].line = line;
+            freed_ptrs[freed_ptrs_i].entry = alloced_ptrs[i];
+            freed_ptrs[freed_ptrs_i].free_file = file;
+            freed_ptrs[freed_ptrs_i].free_line = line;
             freed_ptrs_i++;
             alloced_ptrs[i].ptr = NULL;
-            return 0;
+            return alloced_ptrs[i].size;
         }
     }
-    return 1;
+    return -1;
 }
 
 char* find_dfree(char* ptr)
 {
     for (int i = 0; i < freed_ptrs_i; i++) {
-        if (freed_ptrs[i].ptr == ptr) {
-            return (char*) freed_ptrs[i].file;
+        if (freed_ptrs[i].entry.ptr == ptr) {
+            return (char*) freed_ptrs[i].free_file;
         }
     }
     return NULL;
@@ -78,7 +85,7 @@ void* dbg_malloc(size_t size, char* file, int line)
     if (ptr == NULL) {
         dbg(1, "dbg_malloc: malloc failed");
     }
-    log_ptr(ptr, file, line);
+    log_ptr(ptr,size, file, line);
     return ptr;
 }
 
@@ -89,19 +96,29 @@ void* dbg_calloc(size_t nmemb, size_t size, char* file, int line)
     if (ptr == NULL) {
         dbg(1, "dbg_calloc: calloc failed");
     }
-    log_ptr(ptr, file, line);
+    log_ptr(ptr,size, file, line);
     return ptr;
 }
 
 void* dbg_realloc(void* ptr, size_t size, char* file, int line)
 {
-    dbg(4, "dbg_realloc: %s:%d %p %zu->%zu bytes", file, line, ptr, malloc_usable_size(ptr), size);
     void* newptr = realloc(ptr, size);
     if (newptr == NULL) {
         dbg(1, "dbg_realloc: realloc failed");
     }
-    unlog_ptr(ptr, file, line);
-    log_ptr(newptr, file, line);
+    int s = unlog_ptr(ptr, file, line);
+    if (s < 0)
+    {
+        char* pos = find_dfree((char*) ptr);
+        if (pos != NULL)
+        {
+            dbg(1, "dbg_free: trying to free already freed at %s pointer --> %p", pos, ptr);
+        } else {
+            dbg(1, "dbg_free: trying to free unallocated pointer --> %p", ptr);
+        }
+    }
+    dbg(4, "dbg_free: %s:%d %p - %zu bytes", file, line, ptr, s);
+    log_ptr(newptr,size, file, line);
     return newptr;
 }
 
@@ -113,14 +130,14 @@ char* dbg_strdup(char* str, char* file, int line)
     if (newstr == NULL) {
         dbg(1, "dbg_strdup: strdup failed");
     }
-    log_ptr(newstr, file, line);
+    log_ptr(newstr,size, file, line);
     return newstr;
 }
 
 void dbg_free(void* ptr, char* file, int line)
 {
-    dbg(4, "dbg_free: %s:%d %p - %zu bytes", file, line, ptr, malloc_usable_size(ptr));
-    if (unlog_ptr(ptr, file, line) != 0)
+    int s = unlog_ptr(ptr, file, line);
+    if (s < 0)
     {
         char* pos = find_dfree((char*) ptr);
         if (pos != NULL)
@@ -130,6 +147,7 @@ void dbg_free(void* ptr, char* file, int line)
             dbg(1, "dbg_free: trying to free unallocated pointer --> %p", ptr);
         }
     }
+    dbg(4, "dbg_free: %s:%d %p - %zu bytes", file, line, ptr, s);
     free(ptr);
 }
 
