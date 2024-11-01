@@ -96,7 +96,8 @@ enum level {
 };
 
 extern int DEBUG;
-extern char* DEBUG_UNIT;
+extern char* DEBUG_FN;
+extern char* DEBUG_FILE;
 
 // a tool to have cool terminal output
 int msg(enum level msgLevel, const char* message,...);

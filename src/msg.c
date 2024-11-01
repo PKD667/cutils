@@ -6,7 +6,8 @@
 #include "../cutils.h"
 
 int DEBUG = 0;
-char* DEBUG_UNIT = NULL;
+char* DEBUG_FN = NULL;
+char* DEBUG_FILE = NULL;
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -71,8 +72,14 @@ int f_dbg__(int level,int line,const char* function,const char* file,char* messa
 
     file = strrchr(file,'/')+1;
     /* WARNING : EXPERIMENTAL */
-    if (DEBUG_UNIT != NULL) {
-        if (strcmp(DEBUG_UNIT,function) != 0) {
+    if (DEBUG_FN != NULL) {
+        if (strcmp(DEBUG_FN,function) != 0) {
+            return 1;
+        }
+    }
+
+    if (DEBUG_FILE != NULL) {
+        if (strcmp(DEBUG_FILE,file) != 0) {
             return 1;
         }
     }
