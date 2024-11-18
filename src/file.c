@@ -7,22 +7,22 @@ long rdfile(const char* filePath,char** buffer)
     (*buffer) = 0;
     long length;
     FILE* fp = fopen (filePath, "rb");
-    if (!fp) return -1;
+    if (!fp) return -1; // No such file
 
     fseek (fp, 0, SEEK_END);
     length = ftell(fp);
     fseek (fp, 0, SEEK_SET);
     
     (*buffer) = calloc(length+1,sizeof(char));
-    if ((*buffer)) {
+    if (!(*buffer)) {
         fclose (fp);
-        return -1;
+        return -2; // Allocation failed
     }
 
     fread((*buffer), 1, length, fp);
     fclose (fp);
 
-    if (!(*buffer)) return -1;   
+    if (!(*buffer)) return -2; // Allocation failed
     return length;
 }
 
