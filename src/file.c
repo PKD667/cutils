@@ -7,7 +7,10 @@ long rdfile(const char* filePath,char** buffer)
     (*buffer) = 0;
     long length;
     FILE* fp = fopen (filePath, "rb");
-    if (!fp) return -1; // No such file
+    if (!fp) {
+        printf("File not found %s\n",filePath);
+        return -1; // File not found
+    }
 
     fseek (fp, 0, SEEK_END);
     length = ftell(fp);

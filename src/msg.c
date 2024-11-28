@@ -56,7 +56,7 @@ int msg(enum level msgLevel, const char* message,...) {
             printf("%sERROR: %s%s%s%s\n",BOLDMAGENTA,RESET,MAGENTA,strDest,RESET);
             break;
         case FATAL:
-            printf("%sFATAL: %s%s%s%s\n",BOLDBLUE,RESET,BLUE,strDest,RESET);
+            printf("%sFATAL: %s%s%s%s\n",BOLDRED,RESET,RED,strDest,RESET);
             exit(1);
         default:
             printf("UNKNOWN: %s\n",strDest);
