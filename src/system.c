@@ -106,6 +106,9 @@ int rmrf(char *path) {
     for (int i = 0; list[i] != NULL; i++)
     {
         char* file = list[i];
+        if (strcmp(file,".") == 0 || strcmp(file,"..") == 0) continue;
+
+        dbg(1,"rmrf: removing %s",file);
         char* full_path = calloc(strlen(path)+strlen(file)+2,sizeof(char));
         sprintf(full_path,"%s/%s",path,file);
         if (isdir(full_path) == 0)

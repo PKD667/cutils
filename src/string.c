@@ -1,6 +1,11 @@
 #include "stdlib.h"
 #include "string.h"
 
+
+/*
+    Split a string by a delimiter and store the result in an array of strings.
+    YOU NEED TO PASS A WRITABLE ARRAY. DON'T FREE IT. IT'S USED AS A POOL.
+*/
 unsigned int splita (char* string,char delim,char*** dest) {
     unsigned int count = 0;
     unsigned int alloced = 16 * sizeof(char*);

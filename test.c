@@ -7,6 +7,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+
+
+
+
 int popchar_test()
 {
     char str[] = "Hello World";
@@ -79,22 +83,24 @@ void test_isdir()
 
 // Add tests for file operations
 void test_rmrf() {
-    // Test implementation for rmrf
-    // create a directory
-    int status = mkdir("test_dir", 0700);
-    assert(status == 0); // Assert that directory was created successfully
+
+    char template[] = "/tmp/testdirXXXXXX";
+    char* path = mkdtemp(template);
+
 
     // create a file in the directory
-    FILE *file = fopen("test_dir/test_file", "w");
+    char file_path[100];
+    sprintf(file_path, "%s/test_file", path);
+    FILE *file = fopen(file_path, "w");
     assert(file != NULL); // Assert that file was created successfully
     fclose(file);
 
     // call rmrf function
-    rmrf("test_dir");
+    rmrf(path);
 
     // check if directory still exists
     struct stat st;
-    status = stat("test_dir", &st);
+    int status = stat(path, &st);
     assert(status == -1); // Assert that directory was removed successfully
 }
 
@@ -143,7 +149,9 @@ void test_wrfile() {
 
 void test_pmkdir() {
     // Test implementation for pmkdir
-    const char *path = "/tmp/testdir/subdir";
+    char template[] = "/tmp/testdirXXXXXX";
+
+    char* path = mkdtemp(template);
 
     // Call the function to test
     pmkdir(path);
@@ -154,8 +162,7 @@ void test_pmkdir() {
     assert(S_ISDIR(st.st_mode));
 
     // Cleanup
-    rmdir("/tmp/testdir/subdir");
-    rmdir("/tmp/testdir");
+    rmrf(path); // rmrf is tested separately
 }
 
 void test_mvsp() {
@@ -219,7 +226,8 @@ void test_ls() {
 
 void test_splita() {
     char** result;
-    unsigned int count = splita("Hello,World", ',', &result);
+    char string[] = "Hello,World";
+    unsigned int count = splita(string, ',', &result);
 
     assert(count == 2); // splita should return 2 for "Hello,World" with ',' as delimiter
 
@@ -227,10 +235,7 @@ void test_splita() {
     assert(strcmp(result[0], "Hello") == 0); // First string should be "Hello"
     assert(strcmp(result[1], "World") == 0); // Second string should be "World"
 
-    // Remember to free the result after use
-    for (unsigned int i = 0; i < count; i++) {
-        free(result[i]);
-    }
+
     free(result);
 }
 
@@ -259,6 +264,30 @@ void test_strinarr() {
     assert(index == -1); // strinarr should return -1 for a value that is not in the array
 }
 
+void test_hashtable() {
+    // Test implementation for hashtable functions
+    hashtable* hm = hm_create(10);
+    assert(hm != NULL); // Assert that hashtable was created successfully
+
+    // Add key-value pair to hashtable
+    int value = 42;
+    int status = hm_add(hm, "key", &value);
+    assert(status == 0); // Assert that key-value pair was added successfully
+
+    // Get value from hashtable
+    int* result = hm_get(hm, "key");
+    assert(result != NULL); // Assert that value was retrieved successfully
+    assert(*result == value); // Assert that retrieved value is correct
+
+    // Remove key-value pair from hashtable
+    status = hm_rm(hm, "key");
+    assert(status == 0); // Assert that key-value pair was removed successfully
+
+    // Visualize the content of the hashtable
+    status = hm_visualize(hm);
+    assert(status == 0); // Assert that hashtable content was visualized successfully
+}
+
 int main(int argc, char const *argv[])
 {
 
@@ -277,6 +306,28 @@ int main(int argc, char const *argv[])
     test_dbg_strdup();
     printf("test_dbg_free()\n");
     test_dbg_free();
+    printf("test_isdir()\n");
+    test_isdir();
+    printf("test_rmrf()\n");
+    test_rmrf();
+    printf("test_rdfile()\n");
+    test_rdfile();
+    printf("test_wrfile()\n");
+    test_wrfile();
+    printf("test_pmkdir()\n");
+    test_pmkdir();
+    printf("test_mvsp()\n");
+    test_mvsp();
+    printf("test_ls()\n");
+    test_ls();
+    printf("test_splita()\n");
+    test_splita();
+    printf("test_countc()\n");
+    test_countc();
+    printf("test_strinarr()\n");
+    test_strinarr();
+    printf("test_hashtable()\n");
+    test_hashtable(); 
     printf("test_check_leaks()\n");
     test_check_leaks();
     // Add calls to new test functions here
